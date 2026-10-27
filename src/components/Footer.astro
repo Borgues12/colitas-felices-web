@@ -14,9 +14,21 @@ const enlaces = [
 ];
 
 const redes = [
-  { href: "https://www.facebook.com/colitasfelicesecuador", icon: "bi-facebook", label: "Facebook" },
-  { href: "https://www.instagram.com/colitasfelicesecuador", icon: "bi-instagram", label: "Instagram" },
-  { href: "https://www.tiktok.com/@colitasfelicesdiana", icon: "bi-tiktok", label: "TikTok" },
+  {
+    href: "https://www.facebook.com/colitasfelicesecuador",
+    icon: "bi-facebook",
+    label: "Facebook",
+  },
+  {
+    href: "https://www.instagram.com/colitasfelicesecuador",
+    icon: "bi-instagram",
+    label: "Instagram",
+  },
+  {
+    href: "https://www.tiktok.com/@colitasfelicesdiana",
+    icon: "bi-tiktok",
+    label: "TikTok",
+  },
 ];
 ---
 
@@ -40,22 +52,36 @@ const redes = [
             <img src="/img/logo/logo_mini.svg" alt="Logo Colitas Felices" />
             <span class="cf-footer-brand">Colitas Felices</span>
           </div>
-          <p>Rescatamos, cuidamos y buscamos hogar para perros y gatos en situación de abandono.</p>
+          <p>
+            Rescatamos, cuidamos y buscamos hogar para perros y gatos en
+            situación de abandono.
+          </p>
           <div class="cf-footer-social">
-            {redes.map((r) => (
-              <a href={r.href} target="_blank" rel="noopener noreferrer" aria-label={r.label}>
-                <i class={`bi ${r.icon}`}></i>
-              </a>
-            ))}
+            {
+              redes.map((r) => (
+                <a
+                  href={r.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={r.label}
+                >
+                  <i class={`bi ${r.icon}`} />
+                </a>
+              ))
+            }
           </div>
         </div>
 
         <div class="column is-3">
           <p class="cf-footer-title">Enlaces</p>
           <ul>
-            {enlaces.map((e) => (
-              <li><a href={e.href}>{e.label}</a></li>
-            ))}
+            {
+              enlaces.map((e) => (
+                <li>
+                  <a href={e.href}>{e.label}</a>
+                </li>
+              ))
+            }
           </ul>
         </div>
 
@@ -64,11 +90,15 @@ const redes = [
           <ul>
             <li>
               <i class="bi bi-envelope"></i>
-              <a href="mailto:candongadiana6@gmail.com">candongadiana6@gmail.com</a>
+              <a href="mailto:candongadiana6@gmail.com"
+                >candongadiana6@gmail.com</a
+              >
             </li>
             <li>
               <i class="bi bi-whatsapp"></i>
-              <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener">098 375 0246</a>
+              <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener"
+                >098 375 0246</a
+              >
             </li>
           </ul>
         </div>
@@ -76,6 +106,13 @@ const redes = [
 
       <p class="cf-footer-copy">
         © {year} Fundación Colitas Felices. Todos los derechos reservados.
+      </p>
+      <p class="cf-credit">
+        Desarrollado por <a
+          href="https://www.linkedin.com/in/jose-gallardo-40552623a/"
+          target="_blank"
+          rel="noopener noreferrer">Jose Gallardo</a
+        >
       </p>
     </div>
   </div>
@@ -104,7 +141,11 @@ const redes = [
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(to bottom, rgba(65, 24, 32, 0.85), rgba(65, 24, 32, 0.65));
+    background: linear-gradient(
+      to bottom,
+      rgba(65, 24, 32, 0.85),
+      rgba(65, 24, 32, 0.65)
+    );
   }
 
   .cf-footer-body {
@@ -118,7 +159,9 @@ const redes = [
     gap: 0.75rem;
     margin-bottom: 1rem;
   }
-  .cf-footer-logo img { max-height: 3.5rem; }
+  .cf-footer-logo img {
+    max-height: 3.5rem;
+  }
 
   .cf-footer-brand {
     font-family: var(--cf-font-brand);
@@ -135,7 +178,9 @@ const redes = [
     color: var(--cf-accent-2);
   }
 
-  .cf-footer-body ul li { margin-bottom: 0.5rem; }
+  .cf-footer-body ul li {
+    margin-bottom: 0.5rem;
+  }
   .cf-footer-body ul li i {
     margin-right: 0.5rem;
     color: var(--cf-accent-2);
@@ -145,7 +190,9 @@ const redes = [
     color: rgba(255, 255, 255, 0.8);
     transition: color 0.2s ease;
   }
-  .cf-footer-body a:hover { color: var(--cf-accent-2); }
+  .cf-footer-body a:hover {
+    color: var(--cf-accent-2);
+  }
 
   .cf-footer-social {
     display: flex;
@@ -162,7 +209,9 @@ const redes = [
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
     font-size: 1.15rem;
-    transition: background 0.2s ease, transform 0.2s ease;
+    transition:
+      background 0.2s ease,
+      transform 0.2s ease;
   }
   .cf-footer-social a:hover {
     background: var(--cf-brand);
@@ -181,7 +230,32 @@ const redes = [
 
   @media (prefers-reduced-motion: reduce) {
     .cf-footer-body a,
-    .cf-footer-social a { transition: none; }
-    .cf-footer-social a:hover { transform: none; }
+    .cf-footer-social a {
+      transition: none;
+    }
+    .cf-footer-social a:hover {
+      transform: none;
+    }
+  }
+
+  .cf-credit {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    text-align: center;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .cf-credit a {
+    color: #ffffff;
+    font-weight: 700;
+    text-decoration-color: var(--cf-accent-2);
+    text-underline-offset: 0.25em;
+    text-decoration-thickness: 2px;
+  }
+
+  .cf-credit a:hover {
+    color: var(--cf-accent-2);
+    text-decoration-color: var(--cf-brand);
   }
 </style>
