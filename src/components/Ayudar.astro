@@ -1,0 +1,211 @@
+---
+import { Image } from "astro:assets";
+import insumos from "../assets/images/ayuda/money-transfer.png";
+import voluntario from "../assets/images/ayuda/volunteer.webp";
+import adoptar from "../assets/images/ayuda/dog-adopt.png";
+import compartir from "../assets/images/ayuda/share.png";
+
+const WA = "593983750246";
+const wa = (msg: string) => `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
+
+const cards = [
+  {
+    img: insumos,
+    alt: "Perro recibiendo alimento",
+    title: "DONAR INSUMOS",
+    text: "Alimento, mantas y medicinas cubren las necesidades del día a día de nuestros animales.",
+    cta: { label: "DONAR INSUMOS", href: wa("Hola, quiero donar insumos para los animalitos."), outlined: false },
+  },
+  {
+    img: voluntario,
+    alt: "Voluntaria cuidando a un perro",
+    title: "VOLUNTARIO",
+    text: "Dedica unas horas a pasear, cuidar y acompañar a nuestros rescatados.",
+    cta: { label: "QUIERO AYUDAR", href: wa("Hola, quiero ser voluntario."), outlined: true },
+  },
+  {
+    img: adoptar,
+    alt: "Familia adoptando un gato",
+    title: "ADOPTAR",
+    text: "Abre las puertas de tu hogar a un compañero que espera una segunda oportunidad.",
+    cta: { label: "QUIERO ADOPTAR", href: wa("Hola, quiero adoptar."), outlined: true },
+  },
+  {
+    img: compartir,
+    alt: "Voluntarios compartiendo",
+    title: "COMPARTIR",
+    text: "Síguenos y difunde nuestras historias para que más personas conozcan a quienes buscan hogar.",
+    share: true,
+  },
+];
+
+const redes = [
+  { href: "https://www.facebook.com/colitasfelicesecuador", icon: "bi-facebook", label: "Facebook de Colitas Felices" },
+  { href: "https://www.instagram.com/colitasfelicesecuador", icon: "bi-instagram", label: "Instagram de Colitas Felices" },
+  { href: "https://www.tiktok.com/@colitasfelicesdiana", icon: "bi-tiktok", label: "TikTok de Colitas Felices" },
+];
+---
+
+<section id="ayudar" class="section cf-help">
+  <div class="container">
+    <div class="has-text-centered mb-6 cf-reveal">
+      <p class="font-accent is-size-4">Tú también puedes sumarte</p>
+      <h2 class="title is-2">CÓMO AYUDAR</h2>
+    </div>
+
+    <div class="cf-carousel">
+      <div class="cf-rail" style={`--n:${cards.length}`}>
+        {[false, true].map((clone) =>
+          cards.map((c) => (
+            <div
+              class:list={["cf-slide", { "is-clone": clone }]}
+              aria-hidden={clone ? "true" : undefined}
+              inert={clone}
+            >
+              <article class="cf-card">
+                <Image
+                  class="cf-card-img"
+                  src={c.img}
+                  alt={c.alt}
+                  widths={[400, 640]}
+                  sizes="(min-width: 1024px) 33vw, (min-width: 769px) 50vw, 100vw"
+                  format="webp"
+                  loading="lazy"
+                />
+                <div class="p-5 has-text-centered">
+                  <h3 class="title is-4">{c.title}</h3>
+                  <p class="mb-4">{c.text}</p>
+                  {c.share ? (
+                    <div class="cf-share">
+                      {redes.map((r) => (
+                        <a href={r.href} target="_blank" rel="noopener noreferrer" aria-label={r.label}>
+                          <i class={`bi ${r.icon}`}></i>
+                        </a>
+                      ))}
+                    </div>
+                  ) : (
+                    <a
+                      class:list={["button", "is-primary", { "is-outlined": c.cta!.outlined }]}
+                      href={c.cta!.href}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      {c.cta!.label}
+                    </a>
+                  )}
+                </div>
+              </article>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cf-help {
+    background-color: var(--cf-accent-4);
+  }
+
+  .cf-carousel {
+    --per: 1;
+    overflow: hidden;
+    padding: 1rem 0 1.5rem;
+  }
+
+  @media (min-width: 769px) {
+    .cf-carousel { --per: 2; }
+  }
+  @media (min-width: 1024px) {
+    .cf-carousel { --per: 3; }
+  }
+
+  .cf-rail {
+    display: flex;
+    animation: cf-marquee 40s linear infinite;
+    will-change: transform;
+  }
+
+  .cf-carousel:hover .cf-rail,
+  .cf-carousel:focus-within .cf-rail {
+    animation-play-state: paused;
+  }
+
+  @keyframes cf-marquee {
+    to {
+      transform: translate3d(calc(var(--n) / var(--per) * -100%), 0, 0);
+    }
+  }
+
+  .cf-slide {
+    flex: 0 0 calc(100% / var(--per));
+    padding-right: 1.5rem;
+    display: flex;
+  }
+
+  .cf-card {
+    flex: 1;
+    overflow: hidden;
+    background: var(--cf-surface);
+    border: 1px solid var(--cf-border);
+    border-radius: 12px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .cf-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 14px 30px rgba(65, 24, 32, 0.18);
+  }
+
+  .cf-card :global(.cf-card-img) {
+    display: block;
+    width: 100%;
+    height: 14rem;
+    padding: 1.25rem 1.5rem 0;
+    object-fit: contain;
+    object-position: center bottom;
+    background: var(--cf-accent-1);
+    transition: transform 0.4s ease;
+  }
+  .cf-card:hover :global(.cf-card-img) {
+    transform: scale(1.06);
+  }
+
+  .cf-share {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  .cf-share a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--cf-brand);
+    color: #fff;
+    font-size: 1.3rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .cf-share a:hover {
+    background: var(--cf-inside);
+    transform: translateY(-3px);
+  }
+
+  /* Sin animación: fila desplazable a mano, sin copias */
+  @media (prefers-reduced-motion: reduce) {
+    .cf-carousel {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+    }
+    .cf-rail { animation: none; }
+    .cf-slide { scroll-snap-align: start; }
+    .cf-slide.is-clone { display: none; }
+    .cf-card,
+    .cf-card :global(.cf-card-img),
+    .cf-share a { transition: none; }
+    .cf-card:hover,
+    .cf-card:hover :global(.cf-card-img) { transform: none; }
+  }
+</style>

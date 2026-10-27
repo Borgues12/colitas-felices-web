@@ -1,0 +1,187 @@
+---
+import { Image } from "astro:assets";
+import compromiso from "../assets/images/inicio/compromiso.webp";
+
+const items = [
+  {
+    title: "Misión",
+    text: "Rescatar y rehabilitar animales en situación de abandono, brindándoles atención veterinaria, cariño y la oportunidad de encontrar una familia responsable.",
+    open: true,
+  },
+  {
+    title: "Visión",
+    text: "Ser un referente de protección animal en nuestra comunidad, promoviendo la adopción responsable y una sociedad que respete a todos los seres vivos.",
+  },
+  {
+    title: "Nuestros valores",
+    text: "Empatía, responsabilidad, transparencia en el uso de los donativos y respeto por la vida animal.",
+  },
+];
+---
+
+<section id="nosotros" class="section cf-about">
+  <div class="container">
+    <div class="columns is-vcentered is-variable is-8">
+      <div class="column is-6 cf-reveal">
+        <Image
+          class="cf-about-img"
+          src={compromiso}
+          alt="Perros y gatos rescatados en el refugio"
+          widths={[480, 720, 960]}
+          sizes="(max-width: 768px) 100vw, 50vw"
+          format="webp"
+          loading="lazy"
+        />
+      </div>
+
+      <div class="column is-6 cf-reveal" style="--d:150ms">
+        <h2 class="title is-2 cf-title-xl">
+          Nuestro
+          <mark class="cf-highlight"><span class="font-accent cf-script">compromiso</span></mark><br />
+          es darles una segunda oportunidad.
+        </h2>
+        <p class="is-size-5 mb-5">
+          Detrás de cada colita hay una historia de abandono y una esperanza. Esto es lo que nos mueve cada día.
+        </p>
+
+        <div class="cf-accordion">
+          {items.map((item) => (
+            <details open={item.open}>
+              <summary>{item.title}</summary>
+              <p>{item.text}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const items = Array.from(
+    document.querySelectorAll<HTMLDetailsElement>(".cf-accordion details")
+  );
+
+  function run(d: HTMLDetailsElement, from: number, to: number, done: () => void) {
+    d.style.overflow = "hidden";
+    const anim = d.animate(
+      { height: [`${from}px`, `${to}px`] },
+      { duration: 300, easing: "ease" }
+    );
+    anim.onfinish = () => {
+      d.style.overflow = "";
+      done();
+    };
+  }
+
+  function closeItem(d: HTMLDetailsElement) {
+    if (!d.open || d.classList.contains("is-closing")) return;
+    if (reduce) {
+      d.open = false;
+      return;
+    }
+    const summary = d.querySelector("summary")!;
+    const from = d.offsetHeight;
+    const to = summary.offsetHeight + (d.offsetHeight - d.clientHeight);
+    d.classList.add("is-closing");
+    run(d, from, to, () => {
+      d.open = false;
+      d.classList.remove("is-closing");
+    });
+  }
+
+  function openItem(d: HTMLDetailsElement) {
+    d.classList.remove("is-closing");
+    if (reduce) {
+      d.open = true;
+      return;
+    }
+    const from = d.offsetHeight;
+    d.getAnimations().forEach((a) => a.cancel());
+    d.open = true;
+    const to = d.offsetHeight;
+    run(d, from, to, () => {});
+  }
+
+  items.forEach((d) => {
+    d.querySelector("summary")!.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (d.open && !d.classList.contains("is-closing")) {
+        closeItem(d);
+      } else {
+        items.forEach((o) => o !== d && closeItem(o));
+        openItem(d);
+      }
+    });
+  });
+</script>
+
+<style>
+  .cf-about {
+    background-color: var(--cf-accent-1);
+  }
+
+  .cf-about :global(.cf-about-img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  .cf-title-xl {
+    font-size: clamp(2rem, 4.5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .cf-highlight {
+    background: linear-gradient(transparent 55%, var(--cf-accent-2) 55%);
+    padding: 0 0.25rem;
+  }
+
+  .cf-script { font-size: 1.25em; }
+
+  .cf-accordion {
+    background: var(--cf-surface);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .cf-accordion details {
+    border-bottom: 1px solid var(--cf-border);
+  }
+  .cf-accordion details:last-child { border-bottom: 0; }
+
+  .cf-accordion summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-family: var(--cf-font-heading);
+    color: var(--cf-text-strong);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cf-accordion summary::-webkit-details-marker { display: none; }
+
+  .cf-accordion summary::after {
+    content: "";
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 2px solid var(--cf-brand);
+    border-bottom: 2px solid var(--cf-brand);
+    transform: rotate(45deg);
+    transition: transform 0.2s;
+  }
+  .cf-accordion details[open]:not(.is-closing) summary::after {
+    transform: rotate(-135deg);
+  }
+
+  .cf-accordion details p { padding: 0 1.25rem 1.25rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cf-accordion summary::after { transition: none; }
+  }
+</style>

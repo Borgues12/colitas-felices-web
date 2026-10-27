@@ -1,0 +1,394 @@
+---
+const WA = "593983750246";
+const wa = (msg: string) =>
+  `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
+---
+
+<a
+  id="cf-wa"
+  class="cf-wa"
+  href={wa("Hola, quiero más información.")}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Escríbenos por WhatsApp"
+>
+  <i class="fa-brands fa-whatsapp"></i>
+  <span class="cf-wa-badge" aria-hidden="true">1</span>
+</a>
+
+<aside
+  id="cf-chat"
+  class="cf-chat"
+  aria-label="Mensaje de Colitas Felices"
+  aria-live="polite"
+>
+  <button type="button" class="delete" aria-label="Cerrar" data-chat-close
+  ></button>
+
+  <header class="cf-chat-head">
+    <img src="/img/logo/logo_mini.svg" alt="" />
+    <div>
+      <strong>Colitas Felices</strong>
+      <small>Fundación de rescate animal</small>
+    </div>
+  </header>
+
+  <div class="cf-chat-body">
+    <div class="cf-typing" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+    <p class="cf-msg" data-msg>Gracias por llegar hasta aquí.</p>
+    <p class="cf-msg" data-msg>
+      Puedes adoptar, ser voluntario o donar insumos. Cualquier ayuda cambia la
+      vida de una colita.
+    </p>
+  </div>
+
+  <div class="cf-chat-actions" data-actions>
+    <a class="button is-primary is-small" href="/#ayudar" data-chat-close
+      >Cómo ayudar</a
+    >
+    <a
+      class="button is-primary is-outlined is-small"
+      href={wa("Hola, quiero ayudar a Colitas Felices.")}
+      target="_blank"
+      rel="noopener"
+      data-chat-close
+    >
+      Escribir por WhatsApp
+    </a>
+  </div>
+</aside>
+
+<script>
+  const DELAY = 20000;
+  const KEY = "cf-chat-closed";
+  const COOLDOWN_DISMISS = 1000 * 60 * 60 * 24; // 24 horas
+  const COOLDOWN_ENGAGE = 1000 * 60 * 60 * 24 * 7; // 7 dias
+
+  const chat = document.getElementById("cf-chat");
+  const wa = document.getElementById("cf-wa");
+
+  if (chat && wa) {
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const msgs = chat.querySelectorAll<HTMLElement>("[data-msg]");
+    const actions = chat.querySelector<HTMLElement>("[data-actions]");
+    const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+    let closed = false;
+    let shown = false;
+
+    //leer el estado de cerrado desde localStorage
+    try {
+      closed = Date.now() < Number(localStorage.getItem(KEY) || 0);
+    } catch {}
+
+    //función para cerrar el chat y establecer un tiempo de espera antes de mostrarlo nuevamente
+    function close(cooldown = COOLDOWN_DISMISS) {
+      closed = true;
+      chat!.classList.remove("is-open");
+      wa!.classList.remove("has-badge");
+      try {
+        localStorage.setItem(KEY, String(Date.now() + cooldown));
+      } catch {}
+    }
+
+    async function show() {
+      if (closed || shown) return;
+      shown = true;
+      chat!.classList.add("is-open");
+      wa!.classList.add("has-badge");
+
+      if (!reduce) await wait(1500);
+      if (closed) return;
+      chat!.classList.add("is-done");
+      msgs[0]?.classList.add("is-visible");
+
+      if (!reduce) await wait(900);
+      if (closed) return;
+      msgs[1]?.classList.add("is-visible");
+
+      if (!reduce) await wait(600);
+      if (closed) return;
+      actions?.classList.add("is-visible");
+    }
+
+    // si el chat no ha sido cerrado, mostrarlo después de un retraso
+    if (!closed) {
+      setTimeout(() => {
+        if (!document.hidden) return show();
+        const onVisible = () => {
+          if (document.hidden) return;
+          document.removeEventListener("visibilitychange", onVisible);
+          show();
+        };
+        document.addEventListener("visibilitychange", onVisible);
+      }, DELAY);
+    }
+
+    //eventos: cerrar
+    chat
+      .querySelector(".delete[data-chat-close]")
+      ?.addEventListener("click", () => close(COOLDOWN_DISMISS));
+
+    //eventos: abrir
+    chat
+      .querySelectorAll(".cf-chat-actions [data-chat-close]")
+      .forEach((el) =>
+        el.addEventListener("click", () => close(COOLDOWN_ENGAGE)),
+      );
+
+    //eventos: abrir WhatsApp
+    wa.addEventListener("click", () => close(COOLDOWN_ENGAGE));
+
+    //eventos: cerrar con Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && chat.classList.contains("is-open"))
+        close(COOLDOWN_DISMISS);
+    });
+  }
+</script>
+
+<style>
+  /* Botón de WhatsApp */
+  .cf-wa {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 40;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #25d366;
+    color: #fff;
+    font-size: 1.8rem;
+    line-height: 1;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease;
+  }
+  .cf-wa:hover {
+    color: #fff;
+    transform: scale(1.08);
+  }
+
+  .cf-wa-badge {
+    position: absolute;
+    top: -0.2rem;
+    right: -0.2rem;
+    min-width: 1.3rem;
+    height: 1.3rem;
+    padding: 0 0.3rem;
+    border-radius: 999px;
+    background: #e53935;
+    border: 2px solid #fff;
+    color: #fff;
+    font-family: var(--cf-font-heading);
+    font-size: 0.75rem;
+    line-height: 1;
+    display: none;
+    place-items: center;
+  }
+
+  .cf-wa.has-badge .cf-wa-badge {
+    display: grid;
+  }
+
+  .cf-wa.has-badge::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid #25d366;
+    animation: cf-ring 1.8s ease-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes cf-ring {
+    from {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    to {
+      transform: scale(1.7);
+      opacity: 0;
+    }
+  }
+
+  /* Burbuja de chat */
+  .cf-chat {
+    position: fixed;
+    right: 1rem;
+    bottom: 5.75rem;
+    z-index: 40;
+    width: min(21rem, calc(100vw - 2rem));
+    padding: 1rem 1.25rem 1.1rem;
+    background: var(--cf-surface);
+    border: 1px solid var(--cf-border);
+    border-radius: 16px 16px 4px 16px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+    transform-origin: bottom right;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(1rem) scale(0.92);
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease,
+      visibility 0s linear 0.35s;
+  }
+
+  .cf-chat.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+
+  /* Cola apuntando al botón */
+  .cf-chat::after {
+    content: "";
+    position: absolute;
+    right: 1.2rem;
+    bottom: -0.45rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    background: var(--cf-surface);
+    border-right: 1px solid var(--cf-border);
+    border-bottom: 1px solid var(--cf-border);
+    transform: rotate(45deg);
+  }
+
+  .cf-chat .delete {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+  }
+
+  .cf-chat-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+    padding-right: 1.5rem;
+  }
+  .cf-chat-head img {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0.3rem;
+    border-radius: 50%;
+    background: var(--cf-accent-1);
+    object-fit: contain;
+  }
+  .cf-chat-head strong {
+    display: block;
+    font-family: var(--cf-font-heading);
+    color: var(--cf-text-strong);
+    line-height: 1.2;
+  }
+  .cf-chat-head small {
+    color: var(--cf-text-muted);
+    font-size: 0.75rem;
+  }
+
+  .cf-chat-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: flex-start;
+  }
+
+  .cf-msg {
+    display: none;
+    max-width: 92%;
+    padding: 0.55rem 0.85rem;
+    background: var(--cf-accent-1);
+    border-radius: 4px 14px 14px 14px;
+    font-size: 0.92rem;
+    line-height: 1.45;
+    color: var(--cf-text-strong);
+  }
+  .cf-msg.is-visible {
+    display: block;
+    animation: cf-pop 0.35s ease both;
+  }
+
+  .cf-typing {
+    display: flex;
+    gap: 0.3rem;
+    padding: 0.7rem 0.9rem;
+    background: var(--cf-accent-1);
+    border-radius: 4px 14px 14px 14px;
+  }
+  .cf-typing span {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--cf-text-muted);
+    animation: cf-dot 1s infinite ease-in-out;
+  }
+  .cf-typing span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .cf-typing span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .cf-chat.is-done .cf-typing {
+    display: none;
+  }
+
+  .cf-chat-actions {
+    display: none;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+  }
+  .cf-chat-actions.is-visible {
+    display: flex;
+    animation: cf-pop 0.35s ease both;
+  }
+
+  @keyframes cf-pop {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes cf-dot {
+    0%,
+    80%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.4;
+    }
+    40% {
+      transform: translateY(-0.3rem);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cf-chat,
+    .cf-chat.is-open {
+      transition: none;
+    }
+    .cf-wa {
+      transition: none;
+    }
+    .cf-wa.has-badge::after,
+    .cf-typing span,
+    .cf-msg.is-visible,
+    .cf-chat-actions.is-visible {
+      animation: none;
+    }
+  }
+</style>

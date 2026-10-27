@@ -1,0 +1,159 @@
+---
+const WA = "593983750246";
+const plusCode = "VHWC+MXH";
+
+const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${plusCode} Quito`)}`;
+const waLink = `https://wa.me/${WA}?text=${encodeURIComponent("Hola, quiero coordinar una visita al refugio.")}`;
+
+const horarios = [
+  { dia: "Lunes", tags: [{ texto: "Cerrado", clase: "is-danger" }] },
+  { dia: "Martes a Viernes", tags: [{ texto: "11h00 a 13h00", clase: "is-info" }] },
+  {
+    dia: "Sábados y Domingos",
+    tags: [
+      { texto: "11h00 a 13h00", clase: "is-primary" },
+      { texto: "15h00 a 17h00", clase: "is-primary" },
+    ],
+  },
+];
+
+const mapaSrc =
+  "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3989.811772182781!2d-78.4271389!3d-0.1038056!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d58f0045e99793%3A0xd6786ef942652134!2s!5e0!3m2!1ses-419!2sec!4v1792209412869!5m2!1ses-419!2sec";
+---
+
+<section id="ubicacion" class="section cf-loc">
+  <div class="container">
+    <div class="has-text-centered mb-6 cf-reveal">
+      <p class="font-accent is-size-4">Visítanos</p>
+      <h2 class="title is-2">CÓMO LLEGAR</h2>
+    </div>
+
+    <div class="columns is-variable is-6 is-vcentered">
+      <div class="column is-5 cf-reveal">
+        <article class="cf-loc-card">
+          <h3 class="title is-4 mb-4 has-text-primary-dark">Nuestro Refugio</h3>
+
+          <div class="cf-loc-block">
+            <p class="cf-loc-label">Dirección</p>
+            <p>
+              <strong>Calderón, Quito</strong>
+              <span class="tag is-light is-rounded ml-1">Plus Code: {plusCode}</span>
+            </p>
+          </div>
+
+          <hr class="cf-loc-sep" />
+
+          <div class="cf-loc-block">
+            <p class="cf-loc-label">Horario de visitas</p>
+            <ul>
+              {horarios.map((h) => (
+                <li class="cf-loc-row">
+                  <span class="has-text-grey-dark">{h.dia}</span>
+                  <div class="cf-loc-tags">
+                    {h.tags.map((t) => (
+                      <span class={`tag ${t.clase} is-light`}>{t.texto}</span>
+                    ))}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <hr class="cf-loc-sep" />
+
+          <div class="cf-loc-block">
+            <p class="cf-loc-label">Contacto y citas</p>
+            <p class="has-text-grey-dark">
+              Para una mejor atención en tu visita o consultas sobre adopciones, contáctanos previamente.
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <div class="column is-7 cf-reveal" style="--d:150ms">
+        <div class="cf-map">
+          <iframe
+            src={mapaSrc}
+            title="Ubicación de Colitas Felices en Google Maps"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cf-loc {
+    background-color: var(--cf-surface);
+  }
+
+  .cf-loc-card {
+    height: 100%;
+    padding: 2rem;
+    background: var(--cf-surface);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+  }
+
+  .cf-loc-block { margin-bottom: 1rem; }
+
+  .cf-loc-label {
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--cf-text-muted);
+  }
+
+  .cf-loc-sep {
+    margin: 0.75rem 0;
+    opacity: 0.5;
+  }
+
+  .cf-loc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .cf-loc-tags {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+
+  .cf-loc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .cf-map {
+    height: 100%;
+    min-height: 380px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--cf-border);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .cf-map iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    border: 0;
+  }
+
+  @media (max-width: 768px) {
+    .cf-loc-card { padding: 1.25rem; }
+  }
+</style>

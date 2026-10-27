@@ -1,0 +1,104 @@
+---
+import { Image } from "astro:assets";
+import portada from "../assets/images/inicio/adopta.webp";
+---
+
+<section id="inicio" class="cf-cover">
+  <Image
+    class="cf-cover-img"
+    src={portada}
+    alt="Perro y gato rescatados juntos"
+    widths={[640, 1024, 1600]}
+    sizes="100vw"
+    format="webp"
+    loading="eager"
+    fetchpriority="high"
+  />
+
+  <div class="cf-cover-content">
+    <div class="container has-text-centered">
+      <p class="font-accent is-size-3">Bienvenidos a</p>
+      <h1 class="title is-1 is-size-2-mobile">UN HOGAR PARA CADA COLITA</h1>
+      <p class="subtitle is-4">
+        Cuidamos, protegemos y acompañamos a perros y gatos que esperan una familia.
+      </p>
+      <a class="button is-primary is-medium" href="#ayudar">QUIERO AYUDAR</a>
+    </div>
+  </div>
+
+  <p class="cf-cover-brand" aria-hidden="true">Colitas Felices</p>
+</section>
+
+<style>
+  .cf-cover {
+    position: relative;
+    isolation: isolate;
+    min-height: calc(100vh - 3.25rem);
+    min-height: calc(100svh - 3.25rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    background: var(--cf-accent-2);
+  }
+
+  .cf-cover :global(.cf-cover-img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: bottom;
+    z-index: -2;
+  }
+
+  .cf-cover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      rgba(33, 33, 33, 0.5),
+      rgba(33, 33, 33, 0.15) 45%,
+      rgba(33, 33, 33, 0.6)
+    );
+  }
+
+  .cf-cover-content {
+    padding: 4rem 1.5rem 2rem;
+  }
+
+  .cf-cover .font-accent { color: var(--cf-accent-2); }
+  .cf-cover .title,
+  .cf-cover .subtitle { color: #fff; }
+
+  .cf-cover-brand {
+    margin: 0;
+    padding: 0 1rem 1rem;
+    text-align: center;
+    white-space: nowrap;
+    font-family: var(--cf-font-brand);
+    font-weight: 800;
+    font-size: clamp(2.5rem, 11vw, 10rem);
+    line-height: 1.1;
+    color: var(--cf-inside);
+    -webkit-text-stroke: 0.04em var(--cf-logo-dark);
+    paint-order: stroke fill;
+    text-shadow: 0 0.06em 0 var(--cf-logo-dark), 0 0.14em 0.3em rgba(0, 0, 0, 0.35);
+    animation: brand-in 1s ease-out both, brand-float 5s ease-in-out 1s infinite;
+  }
+
+  @keyframes brand-in {
+    from { opacity: 0; transform: translateY(1.5rem) scale(0.96); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes brand-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-0.4rem); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cf-cover-brand { animation: none; }
+  }
+</style>

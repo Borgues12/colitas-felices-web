@@ -1,0 +1,103 @@
+---
+const stats = [
+  { value: 200, label: "Animales rescatados" },
+  { value: 80, label: "Adopciones responsables" },
+  { value: 8, label: "Años de compromiso" },
+];
+---
+
+<section id="cifras" class="cf-stats">
+  <div class="container">
+    <div class="columns is-mobile is-multiline has-text-centered">
+      {stats.map((s, i) => (
+        <div class="column is-4-tablet is-12-mobile cf-reveal" style={`--d:${i * 100}ms`}>
+          <div class="cf-stat">
+            <p class="cf-stat-number">
+              <span class="cf-counter" data-target={s.value} data-prefix="+">+{s.value}</span>
+            </p>
+            <p class="cf-stat-label">{s.label}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function animate(el: HTMLElement) {
+    const target = Number(el.dataset.target);
+    const prefix = el.dataset.prefix ?? "";
+    const duration = 1600;
+    const start = performance.now();
+
+    function tick(now: number) {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = prefix + Math.round(target * eased);
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const counters = document.querySelectorAll<HTMLElement>(".cf-counter");
+
+  if (!reduce) {
+    counters.forEach((el) => (el.textContent = (el.dataset.prefix ?? "") + "0"));
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            animate(e.target as HTMLElement);
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+    counters.forEach((el) => io.observe(el));
+  }
+</script>
+
+<style>
+  .cf-stats {
+    padding: 4rem 1.5rem;
+    background: linear-gradient(135deg, var(--cf-brand) 0%, var(--cf-inside) 100%);
+  }
+
+  .cf-stat {
+    padding: 1rem;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+  }
+  .cf-stat:hover { transform: translateY(-4px); }
+
+  .cf-stat-number {
+    margin-bottom: 0.25rem;
+    font-family: var(--cf-font-heading);
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .cf-stat-label {
+    font-family: var(--cf-font-heading);
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cf-accent-1);
+  }
+
+  @media (max-width: 768px) {
+    .cf-stats { padding: 3rem 1rem; }
+    .cf-stat { padding: 0.75rem 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cf-stat { transition: none; }
+    .cf-stat:hover { transform: none; }
+  }
+</style>
