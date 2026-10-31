@@ -225,7 +225,9 @@ const equipo = [
     .cf-team-photo :global(img),
     .is-featured .cf-team-photo :global(img) {
       min-height: 0;
-      height: 280px;
+      height: auto;
+      max-height: 480px;
+      object-position: center top;
     }
     .is-featured .cf-team-body { padding: 1.5rem; }
   }

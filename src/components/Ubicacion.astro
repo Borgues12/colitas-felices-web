@@ -6,15 +6,11 @@ const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURICom
 const waLink = `https://wa.me/${WA}?text=${encodeURIComponent("Hola, quiero coordinar una visita al refugio.")}`;
 
 const horarios = [
-  { dia: "Lunes", tags: [{ texto: "Cerrado", clase: "is-danger" }] },
-  { dia: "Martes a Viernes", tags: [{ texto: "11h00 a 13h00", clase: "is-info" }] },
   {
-    dia: "Sábados y Domingos",
-    tags: [
-      { texto: "11h00 a 13h00", clase: "is-primary" },
-      { texto: "15h00 a 17h00", clase: "is-primary" },
-    ],
+    dia: "Lunes a Sábado",
+    tags: [{ texto: "09h00 a 13h00", clase: "is-info" }],
   },
+  { dia: "Domingo", tags: [{ texto: "Cerrado", clase: "is-danger" }] },
 ];
 
 const mapaSrc =
@@ -37,7 +33,9 @@ const mapaSrc =
             <p class="cf-loc-label">Dirección</p>
             <p>
               <strong>Calderón, Quito</strong>
-              <span class="tag is-light is-rounded ml-1">Plus Code: {plusCode}</span>
+              <span class="tag is-light is-rounded ml-1"
+                >Plus Code: {plusCode}</span
+              >
             </p>
           </div>
 
@@ -46,16 +44,18 @@ const mapaSrc =
           <div class="cf-loc-block">
             <p class="cf-loc-label">Horario de visitas</p>
             <ul>
-              {horarios.map((h) => (
-                <li class="cf-loc-row">
-                  <span class="has-text-grey-dark">{h.dia}</span>
-                  <div class="cf-loc-tags">
-                    {h.tags.map((t) => (
-                      <span class={`tag ${t.clase} is-light`}>{t.texto}</span>
-                    ))}
-                  </div>
-                </li>
-              ))}
+              {
+                horarios.map((h) => (
+                  <li class="cf-loc-row">
+                    <span class="has-text-grey-dark">{h.dia}</span>
+                    <div class="cf-loc-tags">
+                      {h.tags.map((t) => (
+                        <span class={`tag ${t.clase} is-light`}>{t.texto}</span>
+                      ))}
+                    </div>
+                  </li>
+                ))
+              }
             </ul>
           </div>
 
@@ -64,7 +64,8 @@ const mapaSrc =
           <div class="cf-loc-block">
             <p class="cf-loc-label">Contacto y citas</p>
             <p class="has-text-grey-dark">
-              Para una mejor atención en tu visita o consultas sobre adopciones, contáctanos previamente.
+              Para una mejor atención en tu visita o consultas sobre adopciones,
+              contáctanos previamente.
             </p>
           </div>
         </article>
@@ -77,8 +78,7 @@ const mapaSrc =
             title="Ubicación de Colitas Felices en Google Maps"
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen
-          ></iframe>
+            allowfullscreen></iframe>
         </div>
       </div>
     </div>
@@ -98,7 +98,9 @@ const mapaSrc =
     border-radius: 12px;
   }
 
-  .cf-loc-block { margin-bottom: 1rem; }
+  .cf-loc-block {
+    margin-bottom: 1rem;
+  }
 
   .cf-loc-label {
     margin-bottom: 0.5rem;
@@ -128,6 +130,11 @@ const mapaSrc =
     align-items: flex-end;
     gap: 0.25rem;
   }
+  .cf-loc-tags :global(.tag) {
+    font-size: 0.95rem;
+    height: auto;
+    padding: 0.5em 1em;
+  }
 
   .cf-loc-actions {
     display: flex;
@@ -154,6 +161,8 @@ const mapaSrc =
   }
 
   @media (max-width: 768px) {
-    .cf-loc-card { padding: 1.25rem; }
+    .cf-loc-card {
+      padding: 1.25rem;
+    }
   }
 </style>
